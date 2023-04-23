@@ -8,18 +8,18 @@ const INCH_IN_FEET: f64 = 12.0;
 const INCH_IN_MILES: f64 = INCH_IN_FEET*5280.0;
 //main function
 fn main() {
-    println!("please note this is still in development, as of now only distance works!");
+    println!("please note this is still in development, as of now weight doesnt work!");
     //get what they want to convert from, to, and amount wanted to convert!
-    println!("Please chose from the following units of mesaurements to convert from, Please note it is all case sensitive");
+    println!("Please chose from the following units of mesaurements to convert from,\nPlease note it is all case sensitive");
     println!("Distance Measurements:");
     println!("Centimeters\nMeters\nKilometers\nInches\nFeet\nMiles\n");
     println!("Temperature Measurements:");
     println!("Fahrenheit\nCelsius\nKelvin\n");
     println!("Weight Measurements:");
     println!("Kilograms\nPounds\n");
-    println!("Please type what catagory you would like to choose from: Distance, Tempature, or Weight");
+    println!("Please type what catagory you would like to choose from: Distance, Tempature, or Weight\n");
     let catagory: String = input();
-    println!("\nPlease choose what you are converting from!");
+    println!("\nPlease choose what you are converting from!\n");
     let convfrom: String = input();
     println!("\nPlease choose what you are converting to from the same catagory!\n");
     let convto: String = input();
@@ -39,6 +39,8 @@ fn main() {
         if convto != "Centimeters".to_string() && convto != "Inches".to_string(){
             convamount = convertto(&convto, convamount, unit);
         } 
+    } if &catagory == "Temperature"{
+        convamount = tempswitch(&convto, &convfrom, convamount);
     }
     println!("Your conversion of {convfrom} to {convto} results in {convamount} {convto}!");
 }
@@ -89,7 +91,18 @@ fn convertto(convto: &str, convamount: f64, unit:&str)->f64{
         panic!("An unforseen error has occured!")
     }
 }
+//converts tempatures
+fn tempswitch(convto: &str, convfrom:&str, convamount:f64)->f64{
+    if convfrom == "Celsius" && convto == "Fahrenheit"{
+        return (convamount*9.0)/5.0+32.0;
+    } else if convfrom == "Fahrenheit" && convto == "Celsius"{
+        return ((convamount-32.0)*5.0)/9.0;
+    } else {
+        return convamount;
+    }
+}
 //Function that makes a stirng from user input andn removes whitespace.
+
 fn input() -> String {
     let mut x = String::new();
     io::stdin().read_line(&mut x).expect("Something failed!");
