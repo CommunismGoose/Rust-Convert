@@ -1,7 +1,4 @@
-#[allow(unused)]
 //importing
-use std::env;
-use clap::Parser; 
 use std::process;
 //definng constants
 const CEN_IN_MET: f64 = 100.0;
@@ -10,13 +7,6 @@ const CEN_IN_INCH: f64 = 2.54;
 const INCH_IN_FEET: f64 = 12.0;
 const INCH_IN_MILES: f64 = INCH_IN_FEET * 5280.0;
 //struct
-#[derive(Parser)]
-struct Cli{
-    catagory: String,
-    convfrom: String,
-    convto: String,
-    convamount: f64,
-}
 //main function
 fn main() {
     //for commandline tool
@@ -62,8 +52,15 @@ fn convertfrom(convfrom: &str, convamount: f64) -> (f64, &str) {
         return (convamount * INCH_IN_FEET, "Metric");
     } else if convfrom.eq_ignore_ascii_case("mi") {
         return (convamount * INCH_IN_MILES, "Imperial");
-    } else {
-        return (convamount, "unknown");
+    } else if convfrom.eq_ignore_ascii_case("cm") {
+        return (convamount, "Metric");
+    } else if convfrom.eq_ignore_ascii_case("inch") {
+        return (convamount, "Imperial");
+    } else if convfrom.eq_ignore_ascii_case("y"){
+        return (convamount*INCH_IN_FEET*3.0, "Imperial")
+    }else {
+        println!("invalid, exiting");
+        panic!();
     }
 }
 //converts from inches and centimeters to the required unit based on
@@ -79,7 +76,13 @@ fn convertto(convto: &str, convamount: f64, unit: &str) -> f64 {
             return (convamount / CEN_IN_INCH) / INCH_IN_FEET;
         } else if convto.eq_ignore_ascii_case("mi") {
             return (convamount / CEN_IN_INCH) / INCH_IN_MILES;
-        } else {
+        } else if convto.eq_ignore_ascii_case("y"){
+            return (convamount/CEN_IN_INCH)/INCH_IN_FEET/3.0;
+        }else if convto.eq_ignore_ascii_case("cm"){
+            return convamount
+        }else if convto.eq_ignore_ascii_case("inch"){
+            return convamount/CEN_IN_INCH
+        }else {
             panic!("An unforseen error has occured!");
         }
     } else if unit == "Imperial" {
@@ -91,7 +94,13 @@ fn convertto(convto: &str, convamount: f64, unit: &str) -> f64 {
             return convamount / INCH_IN_FEET;
         } else if convto.eq_ignore_ascii_case("mi") {
             return convamount / INCH_IN_MILES;
-        } else {
+        }else if convto.eq_ignore_ascii_case("y"){
+            return convamount / INCH_IN_FEET/3.0
+        }else if convto.eq_ignore_ascii_case("inch"){
+            return convamount
+        }else if convto.eq_ignore_ascii_case("cm"){
+            return convamount*CEN_IN_INCH
+        }else {
             panic!("An unforseen error has occured!");
         }
     } else {
@@ -114,27 +123,18 @@ fn distance(mut convamount: f64, convfrom: &str, convto: &str) -> f64 {
     //starts converting by calling the functions needed
     let convtuple = convertfrom(&convfrom, convamount);
     convamount = convtuple.0;
-    let mut unit = convtuple.1;
-    if convfrom.eq_ignore_ascii_case("cm") {
-        unit = "Metric";
-    } else if convfrom.eq_ignore_ascii_case("inch") {
-        unit = "Imperial";
-    }
-    if convto.eq_ignore_ascii_case("cm") && convto.eq_ignore_ascii_case("inch") {
-    } else {
-        convamount = convertto(&convto, convamount, unit);
-    }
+    let unit = convtuple.1;
+    convamount = convertto(&convto, convamount, unit);
     return convamount;
 }
 fn help(){
     println!("Please chose from the following units of mesaurements to convert fromn\n");
     println!("Please use the shorthand version (In parentheses)");
     println!("Distance Measurements:");
-    println!("Centimeters(CM)\nMeters(M)\nKilometers(KM)\nInches(INCH)\nFeet(F)\nMiles(MI)\n");
+    println!("Centimeters(CM)\nMeters(M)\nKilometers(KM)\nInches(INCH)\nFeet(F)\nYard (Y)\nMiles(MI)\n");
     println!("Temperature(TEMP) Measurements:");
     println!("Fahrenheit(F)\nCelsius(C)\n");
     println!("To use the command please type \nConvert (catagory you want) (Starting unit) (Ending unit) (amount)");
     println!("For example this is a valid line:\nCargo run Distance MI CM 27");
     process::exit(32);
 }
-
