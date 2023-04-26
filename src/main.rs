@@ -67,30 +67,8 @@ fn convertfrom(convfrom: &str, convamount: f64) -> (f64, &str) {
 //Determines if it is inches or centimeters from the metric or imperial
 //return from last string.
 fn convertto(convto: &str, convamount: f64, unit: &str) -> f64 {
-    if unit == "Metric" {
-        if convto.eq_ignore_ascii_case("m") {
-            return convamount / CEN_IN_MET;
-        } else if convto.eq_ignore_ascii_case("km") {
-            return convamount / CEN_IN_KM;
-        } else if convto.eq_ignore_ascii_case("f") {
-            return (convamount / CEN_IN_INCH) / INCH_IN_FEET;
-        } else if convto.eq_ignore_ascii_case("mi") {
-            return (convamount / CEN_IN_INCH) / INCH_IN_MILES;
-        } else if convto.eq_ignore_ascii_case("y"){
-            return (convamount/CEN_IN_INCH)/INCH_IN_FEET/3.0;
-        }else if convto.eq_ignore_ascii_case("cm"){
-            return convamount
-        }else if convto.eq_ignore_ascii_case("inch"){
-            return convamount/CEN_IN_INCH
-        }else {
-            panic!("An unforseen error has occured!");
-        }
-    } else if unit == "Imperial" {
-        if convto.eq_ignore_ascii_case("m") {
-            return (convamount * CEN_IN_INCH) / CEN_IN_MET;
-        } else if convto.eq_ignore_ascii_case("km") {
-            return (convamount * CEN_IN_INCH) / CEN_IN_KM;
-        } else if convto.eq_ignore_ascii_case("f") {
+    if unit == "Imperial" {
+        if convto.eq_ignore_ascii_case("f") {
             return convamount / INCH_IN_FEET;
         } else if convto.eq_ignore_ascii_case("mi") {
             return convamount / INCH_IN_MILES;
@@ -98,10 +76,18 @@ fn convertto(convto: &str, convamount: f64, unit: &str) -> f64 {
             return convamount / INCH_IN_FEET/3.0
         }else if convto.eq_ignore_ascii_case("inch"){
             return convamount
+        }else{
+            return convertto(convto,convamount*CEN_IN_INCH,"Metric")
+        }
+    }else if unit == "Metric" {
+        if convto.eq_ignore_ascii_case("m") {
+            return convamount / CEN_IN_MET;
+        } else if convto.eq_ignore_ascii_case("km") {
+            return convamount / CEN_IN_KM;
         }else if convto.eq_ignore_ascii_case("cm"){
-            return convamount*CEN_IN_INCH
+            return convamount
         }else {
-            panic!("An unforseen error has occured!");
+            return convertto(convto,convamount/CEN_IN_INCH,"Imperial");
         }
     } else {
         panic!("An unforseen error has occured!")
