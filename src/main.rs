@@ -59,8 +59,8 @@ fn convertfrom(convfrom: &str, convamount: f64) -> (f64, &str) {
     } else if convfrom.eq_ignore_ascii_case("y"){
         return (convamount*INCH_IN_FEET*3.0, "Imperial")
     }else {
-        println!("invalid, exiting");
-        panic!();
+        eprintln!("An invalid measurement was put in!");
+        process::exit(1)
     }
 }
 //converts from inches and centimeters to the required unit based on
@@ -90,7 +90,8 @@ fn convertto(convto: &str, convamount: f64, unit: &str) -> f64 {
             return convertto(convto,convamount/CEN_IN_INCH,"Imperial");
         }
     } else {
-        panic!("An unforseen error has occured!")
+        eprintln!("a unforseen error has occured!");
+        process::exit(1);
     }
 }
 //converts tempatures
@@ -122,5 +123,5 @@ fn help(){
     println!("Fahrenheit(F)\nCelsius(C)\n");
     println!("To use the command please type \nConvert (catagory you want) (Starting unit) (Ending unit) (amount)");
     println!("For example this is a valid line:\nCargo run Distance MI CM 27");
-    process::exit(32);
+    process::exit(0);
 }
