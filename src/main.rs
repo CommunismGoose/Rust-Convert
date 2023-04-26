@@ -45,19 +45,19 @@ fn main() {
 //and imperial units to inches aswell as returns if its metric or imperial
 fn convertfrom(convfrom: &str, convamount: f64) -> (f64, &str) {
     if convfrom.eq_ignore_ascii_case("m") {
-        return (convamount * CEN_IN_MET, "Metric");
+        (convamount * CEN_IN_MET, "Metric")
     } else if convfrom.eq_ignore_ascii_case("km") {
-        return (convamount * CEN_IN_KM, "Metric");
+        (convamount * CEN_IN_KM, "Metric")
     } else if convfrom.eq_ignore_ascii_case("f") {
-        return (convamount * INCH_IN_FEET, "Metric");
+        (convamount * INCH_IN_FEET, "Metric")
     } else if convfrom.eq_ignore_ascii_case("mi") {
-        return (convamount * INCH_IN_MILES, "Imperial");
+        (convamount * INCH_IN_MILES, "Imperial")
     } else if convfrom.eq_ignore_ascii_case("cm") {
-        return (convamount, "Metric");
+        (convamount, "Metric")
     } else if convfrom.eq_ignore_ascii_case("inch") {
-        return (convamount, "Imperial");
+        (convamount, "Imperial")
     } else if convfrom.eq_ignore_ascii_case("y"){
-        return (convamount*INCH_IN_FEET*3.0, "Imperial")
+        (convamount*INCH_IN_FEET*3.0, "Imperial")
     }else {
         eprintln!("An invalid measurement was put in!");
         process::exit(1)
@@ -69,25 +69,25 @@ fn convertfrom(convfrom: &str, convamount: f64) -> (f64, &str) {
 fn convertto(convto: &str, convamount: f64, unit: &str) -> f64 {
     if unit == "Imperial" {
         if convto.eq_ignore_ascii_case("f") {
-            return convamount / INCH_IN_FEET;
+            convamount / INCH_IN_FEET
         } else if convto.eq_ignore_ascii_case("mi") {
-            return convamount / INCH_IN_MILES;
+            convamount / INCH_IN_MILES
         }else if convto.eq_ignore_ascii_case("y"){
-            return convamount / INCH_IN_FEET/3.0
+            convamount / INCH_IN_FEET/3.0
         }else if convto.eq_ignore_ascii_case("inch"){
-            return convamount
+            convamount
         }else{
-            return convertto(convto,convamount*CEN_IN_INCH,"Metric")
+            convertto(convto,convamount*CEN_IN_INCH,"Metric")
         }
     }else if unit == "Metric" {
         if convto.eq_ignore_ascii_case("m") {
-            return convamount / CEN_IN_MET;
+            convamount / CEN_IN_MET
         } else if convto.eq_ignore_ascii_case("km") {
-            return convamount / CEN_IN_KM;
+            convamount / CEN_IN_KM
         }else if convto.eq_ignore_ascii_case("cm"){
-            return convamount
+            convamount
         }else {
-            return convertto(convto,convamount/CEN_IN_INCH,"Imperial");
+            convertto(convto,convamount/CEN_IN_INCH,"Imperial")
         }
     } else {
         eprintln!("a unforseen error has occured!");
@@ -97,7 +97,7 @@ fn convertto(convto: &str, convamount: f64, unit: &str) -> f64 {
 //converts tempatures
 fn tempswitch(convto: &str, convfrom: &str, convamount: f64) -> f64 {
     if convfrom.eq_ignore_ascii_case("c") && convto.eq_ignore_ascii_case("f") {
-        return (convamount * 9.0) / 5.0 + 32.0;
+        (convamount * 9.0) / 5.0 + 32.0
     } else if convfrom.eq_ignore_ascii_case("f") && convto.eq_ignore_ascii_case("c")
     {
         return ((convamount - 32.0) * 5.0) / 9.0;
@@ -108,11 +108,11 @@ fn tempswitch(convto: &str, convfrom: &str, convamount: f64) -> f64 {
 //Function that makes a stirng from user input andn removes whitespace.
 fn distance(mut convamount: f64, convfrom: &str, convto: &str) -> f64 {
     //starts converting by calling the functions needed
-    let convtuple = convertfrom(&convfrom, convamount);
+    let convtuple = convertfrom(convfrom, convamount);
     convamount = convtuple.0;
     let unit = convtuple.1;
-    convamount = convertto(&convto, convamount, unit);
-    return convamount;
+    convamount = convertto(convto, convamount, unit);
+    convamount
 }
 fn help(){
     println!("Please chose from the following units of mesaurements to convert fromn\n");
